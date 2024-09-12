@@ -27,6 +27,7 @@ def login_user():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        name = request.form['name']
         try:
             if check_sqli(username) or check_sqli(password):
                 pass

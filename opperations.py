@@ -4,7 +4,7 @@ import random
 import datetime
 import os
 from dotenv import load_dotenv
-
+load_dotenv(".env")
 timeout = 10
 connection = pymysql.connect(
   charset="utf8mb4",
@@ -14,7 +14,7 @@ connection = pymysql.connect(
   host= os.getenv("DB_HOST"),
   password=os.getenv("DB_PASS"),
   read_timeout=timeout,
-  port= int(os.getenv("DB_PORT")),
+  port=(int(os.getenv("DB_PORT"))),
   user=os.getenv("DB_USER"),
   write_timeout=timeout,
 )
