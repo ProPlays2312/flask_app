@@ -25,11 +25,6 @@ def check_sqli(input_string):
     return True
 
 def register(username, password):
-    try:
-        if check_sqli(username) or check_sqli(password):
-            pass
-    except Exception as e:
-        raise e
     uid = random.randint(10000,99999) ^ 12345
     date = datetime.date.today().strftime("%Y-%m-%d")
     cursor = connection.cursor()

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from opperations import register, login
+from opperations import register, login, check_sqli
 app = Flask(__name__)
 
 @app.route('/')
@@ -12,6 +12,11 @@ def register_user():
         username = request.form['username']
         password = request.form['password']
         try:
+            if check_sqli(username) or check_sqli(password):
+                pass
+        except Exception as e:
+            raise e  
+        try:
             register(username, password)
             return 'Registration successful!'
         except Exception as e:
@@ -22,6 +27,11 @@ def login_user():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        try:
+            if check_sqli(username) or check_sqli(password):
+                pass
+        except Exception as e:
+            raise e
         try:
             if login(username, password):
                 return 'Login successful!'
