@@ -20,9 +20,9 @@ connection = pymysql.connect(
 )
 def data(uid):
     cursor = connection.cursor()
-    cursor.execute(f"SELECT * FROM login WHERE uid = {uid};")
+    cursor.execute(f"SELECT login.c_date, data.name, data.email, data.quote FROM login INNER JOIN data ON login.u_name = data.u_name WHERE login.uid = {uid};")
     a = cursor.fetchall()
-    return a
+    return a[0]["c_date"], a[0]["name"], a[0]["email"], a[0]["quote"]
 
 # Function to check for SQL Injection
 def check_sqli(input_string):
@@ -74,6 +74,7 @@ def login(username, password):
         if not a:
             raise Exception("Incorrect password")
         else:
-            raise Exception("Login successful")
+            date, name, email, quote = data(a[0]["uid"])
+            return(date, name, email, quote)
     except Exception as e:
         raise e

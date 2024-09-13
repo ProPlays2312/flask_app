@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index2.html')
+    return render_template('index.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_user():
@@ -37,10 +37,27 @@ def login_user():
             raise e
         try:
             if login(username, password):
-                return 'Login successful!'
+                a = login(username, password)
+                date, name, email, quote = a[0], a[1], a[2], a[3]
+                pass
         except Exception as e:
             return f'Error: {str(e)}'
-    return render_template('login.html')
+        html = f"""<!DOCTYPE html>
+                     <html>
+                     <head>
+                            <title>Details</title>
+                     </head>
+                     <body>
+                            <div style="text-align: center;">
+                             <h2 style="color: red;">Login Successful!</h2>
+                            </div>
+                            <div style="text-align:left;" id="Name"><h3>Name:{name}</h3></div>
+                            <div style="text-align:left;" id="Email"><h3>Email:{email}</h3></div>
+                            <div style="text-align:left;" id="Date"><h3>Date</h3>{date}</div>
+                            <div style="text-align:left;" id="Quote"><h3>Quote</h3>{quote}</div>
+                      </body>
+                      </html>"""
+    return html
 
 if __name__ == '__main__':
     app.run(debug=False, port=8080)
