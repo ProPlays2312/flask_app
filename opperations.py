@@ -54,15 +54,23 @@ def login(username, password):
     except Exception as e:
         raise e
     cursor = connection.cursor()
-    cursor.execute(f"SELECT u_name,pass FROM login;")
+    cursor.execute(f"SELECT u_name FROM login;")
     a = cursor.fetchall()
-    for i in a:
-        if i["u_name"] == username:
-            if i["pass"] == password:
-                print("Login successful")
-                return True
-            else:
-                raise Exception("Incorrect password")
-        else:
+    try:
+        if not any(username in i.values() for i in a):
             raise Exception("Username not found")
-    return False
+    except Exception as e:
+        raise e
+    cursor.execute(f"SELECT uid FROM login WHERE u_name = '{username}' AND pass = '{password}';")
+    a = cursor.fetchall()
+    try:
+        if not a:
+            raise Exception("Incorrect password")
+        else:
+            raise Exception("Login successful")
+    except Exception as e:
+        raise e
+try:
+    login("abcd", "1234567")
+except Exception as e:
+    print(f"Error: {str(e)}")
