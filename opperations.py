@@ -18,6 +18,12 @@ connection = pymysql.connect(
   user=os.getenv("DB_USER"),
   write_timeout=timeout,
 )
+def data(uid):
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM login WHERE uid = {uid};")
+    a = cursor.fetchall()
+    return a
+
 # Function to check for SQL Injection
 def check_sqli(input_string):
     sqli_payloads = ["'", "\"", ";", "--", "/*", "*/", "xp_", "exec", "sp_", "xp_cmdshell", "SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "CREATE", "ALTER", "JOIN", "WHERE", "FROM", "UNION", "HAVING", "ORDER", "GROUP", "BY", "COUNT", "INTO", "VALUES", "DECLARE", "SET", "TRUNCATE", "REPLACE", "FETCH", "SUBSTRING", "CONVERT", "CAST", "HAVING", "EXISTS", "BETWEEN", "LIKE", "IN", "IS", "NULL", "AND", "OR", "NOT", "ALL", "ANY", "SOME", "CASE", "WHEN", "THEN", "ELSE", "END", "AS", "ASC", "DESC", "LIMIT", "OFFSET", "INNER", "OUTER", "LEFT", "RIGHT", "FULL", "CROSS", "NATURAL", "JOIN", "ON", "USING", "WHEN", "MATCH", "AGAINST", "LIKE", "REGEXP"]
@@ -26,7 +32,7 @@ def check_sqli(input_string):
             raise Exception("SQL Injection detected")
     return True
 # Function to register a user
-def register(username, password):
+def register(username, password, name, email, quote):
     uid = random.randint(10000,99999) ^ 12345
     date = datetime.date.today().strftime("%Y-%m-%d")
     cursor = connection.cursor()
@@ -44,6 +50,7 @@ def register(username, password):
         else:
             continue
     cursor.execute(f"INSERT INTO login (u_name,uid,pass,c_date) VALUES ('{username}',{uid},'{password}','{date}');")
+    cursor.execute(f"INSERT INTO data (u_name,name,email,quote) VALUES ('{username}','{name}','{email}','{quote}');")
     connection.commit()
     return True
 # Function to login a user
@@ -70,7 +77,3 @@ def login(username, password):
             raise Exception("Login successful")
     except Exception as e:
         raise e
-try:
-    login("abcd", "1234567")
-except Exception as e:
-    print(f"Error: {str(e)}")

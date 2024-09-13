@@ -11,13 +11,16 @@ def register_user():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        quote = request.form['quote']
         try:
             if check_sqli(username) or check_sqli(password):
                 pass
         except Exception as e:
             raise e  
         try:
-            register(username, password)
+            register(username, password, name, email, quote)
             return 'Registration successful!'
         except Exception as e:
             return f'Error: {str(e)}'
@@ -27,7 +30,6 @@ def login_user():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        name = request.form['name']
         try:
             if check_sqli(username) or check_sqli(password):
                 pass
